@@ -3,7 +3,7 @@ import { getAddressSchedule, closeDtekResources } from "./dtekApi.js";
 import { renderStatusCard } from "./renderer.js";
 import { buildCaption } from "./caption.js";
 import { sendTelegramNotification, checkTelegramChat } from "./telegram.js";
-import { checkOutageReminders } from "./reminders.js";
+
 function parseTargets() {
   const raw = process.env.TARGETS;
   if (!raw) throw new Error("Не задано змінну TARGETS (список адрес у форматі JSON).");
@@ -78,12 +78,7 @@ async function runCheck() {
 
       try {
         const scheduleData = await getAddressSchedule(target);
-        await checkOutageReminders({
-  target,
-  scheduleData,
-  token,
-  chatId,
-});
+
         const scheduleHash = createScheduleHash(scheduleData);
         const photoPath = await renderStatusCard(target, scheduleData, {
           alertMessage: scheduleData.alertMessage,
