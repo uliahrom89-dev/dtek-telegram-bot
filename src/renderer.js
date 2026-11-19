@@ -65,7 +65,7 @@ export function getKyivNow() {
   };
 }
 
-export function addDaysToIsoDate(isoDate, days) {
+export function formatDateDisplay(isoDate) {
   const [y, m, d] = dateStr.split("-");
   return `${d}.${m}.${y}`;
 }
@@ -86,7 +86,7 @@ function dateKeyToIsoDate(unixSeconds) {
   return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
-function addDaysToIsoDate(isoDate, days) {
+export function addDaysToIsoDate(isoDate, days) {
   const [y, m, d] = isoDate.split("-").map(Number);
   const dt = new Date(Date.UTC(y, m - 1, d + days));
   return dt.toISOString().slice(0, 10);
