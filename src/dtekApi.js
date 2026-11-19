@@ -1,4 +1,6 @@
-const SHUTDOWNS_URL = process.env.DTEK_URL || "https://www.dtek-krem.com.ua/ua/shutdowns";
+-
+
+const SHUTDOWNS_URL = process.env.DTEK_URL || "https://www.dtek-kem.com.ua/ua/shutdowns";
 const RETRIES_MAX_COUNT = 2;
 const RETRIES_TIMEOUT = 4000;
 
@@ -224,10 +226,17 @@ function matchCity(streets, city) {
 
 function matchStreet(streetList, street) {
   if (!Array.isArray(streetList)) return null;
+
+  // DTEK may list a street with or without a type prefix (e.g. "вул.").
+  const streetName = (value) => clean(value)
+    .replace(/^(?:вул(?:иця)?|просп(?:ект)?|пров(?:улок)?|бульв(?:ар)?|бул(?:ьвар)?)\.?\s+/, "")
+    .trim();
+
   return (
     streetList.find((item) => normalize(item) === normalize(street)) ||
     streetList.find((item) => clean(item) === clean(street)) ||
-    streetList.find((item) => clean(item).includes(clean(street)) || clean(street).includes(clean(item))) ||
+    streetList.find((item) => streetName(item) === streetName(street)) ||
+    streetList.find((item) => streetName(item).includes(streetName(street)) || streetName(street).includes(streetName(item))) ||
     null
   );
 }
