@@ -256,7 +256,7 @@ export async function resolveHouse({ parsed, target, post }) {
     const streetsResponse = await post({ method: "getStreets" });
     if (streetsResponse.data?.streets) streets = streetsResponse.data.streets;
   }
-  console.log("DTEK DEBUG — cities:", Object.keys(streets || {}).slice(0, 20));
+  console.log("DTEK DEBUG — streets sample:", JSON.stringify(streets).slice(0, 1500));
   const cityKey = matchCity(streets, target.city);
   if (!cityKey) {
     throw new Error(`Населений пункт «${target.city}» не знайдено на сайті ДТЕК.`);
