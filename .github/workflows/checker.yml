@@ -1,3 +1,4 @@
+
 name: DTEK Schedule Checker
 
 on:
@@ -49,7 +50,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TARGETS: ${{ secrets.TARGETS }}
-        DTEK_BROWSER_FALLBACK: 'true'
+          DTEK_BROWSER_FALLBACK: 'true'
         run: npm start
 
       - name: Save state
