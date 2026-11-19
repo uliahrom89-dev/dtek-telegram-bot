@@ -251,7 +251,7 @@ function matchHouse(houseKeys, house) {
 }
 
 export async function resolveHouse({ parsed, target, post }) {
-  let streets = parsed.streets || {};
+  let streets = {};
   if (!Object.keys(streets).length) {
     const streetsResponse = await post({ method: "getStreets" });
     if (streetsResponse.data?.streets) streets = streetsResponse.data.streets;
