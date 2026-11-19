@@ -33,7 +33,7 @@ jobs:
         run: node scripts/checkHttp.mjs
 
       - name: Install Playwright Chromium (only if HTTP is blocked)
-        if: steps.dtek_http.outcome == 'failure'
+        if: always()
         run: npx playwright install --with-deps chromium
 
       - name: Restore state
