@@ -107,7 +107,7 @@ function buildDateIndex(fact) {
   return index;
 }
 
-function computeOutageIntervals(hours) {
+export function computeOutageIntervals(hours) {
   if (!hours) return { off: [], maybe: [] };
 
   const segments = [];
