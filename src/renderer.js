@@ -46,7 +46,7 @@ const BOLT_OFF = "M15.875 15.0818L0.918125 0.124957L0.125 0.918082L3.725 4.52371
 
 const VALID_STATES = new Set(["yes", "no", "maybe", "first", "second", "mfirst", "msecond"]);
 
-function getKyivNow() {
+export function getKyivNow() {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: KYIV_TZ,
     year: "numeric",
@@ -65,7 +65,7 @@ function getKyivNow() {
   };
 }
 
-function formatDateDisplay(dateStr) {
+export function addDaysToIsoDate(isoDate, days) {
   const [y, m, d] = dateStr.split("-");
   return `${d}.${m}.${y}`;
 }
@@ -98,7 +98,7 @@ function safeDateFromKey(key) {
   return dateKeyToIsoDate(num);
 }
 
-function buildDateIndex(fact) {
+export function buildDateIndex(fact) {
   const index = new Map();
   for (const key of Object.keys(fact?.data || {})) {
     const iso = safeDateFromKey(key);
@@ -160,11 +160,11 @@ function minutesToTime(minutes) {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
-function formatIntervals(intervals) {
+export function formatIntervals(intervals) {
   return intervals.map((i) => `${minutesToTime(i.from)}–${minutesToTime(i.to)}`).join(", ");
 }
 
-function resolveCurrentStatus(hours, now) {
+export function resolveCurrentStatus(hours, now) {
   if (!hours) return { cls: "unknown", text: "Дані відсутні" };
   const state = hours[now.hour + 1];
   if (!state) return { cls: "unknown", text: "Дані відсутні" };
@@ -201,7 +201,7 @@ function textWidth(text, fontSize, weight = 400) {
   return String(text ?? "").length * fontSize * factor;
 }
 
-function wrapText(text, maxWidth, fontSize, weight = 400) {
+export function wrapText(text, maxWidth, fontSize, weight = 400) {
   const words = String(text ?? "").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
   if (!words.length) return [];
 
@@ -543,7 +543,7 @@ function renderDaySection({ title, date, active, groups, dayData, preset, now, i
   return { svg: parts.join(""), height };
 }
 
-function renderStatusCardSvg(target, scheduleData, options = {}) {
+export function renderStatusCardSvg(target, scheduleData, options = {}) {
   const now = options.now || getKyivNow();
   const fact = scheduleData?.fact || null;
   const preset = scheduleData?.preset || null;
@@ -720,14 +720,4 @@ export async function renderStatusCard(target, scheduleData, options = {}) {
   return outputPath;
 }
 
-export {
-  computeOutageIntervals,
-  formatIntervals,
-  getKyivNow,
-  resolveCurrentStatus,
-  formatDateDisplay,
-  addDaysToIsoDate,
-  buildDateIndex,
-  renderStatusCardSvg,
-  wrapText,
-};
+
