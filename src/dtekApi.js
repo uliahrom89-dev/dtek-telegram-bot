@@ -257,15 +257,27 @@ export async function resolveHouse({ parsed, target, post }) {
     if (streetsResponse.data?.streets) streets = streetsResponse.data.streets;
   }
   console.log("DTEK DEBUG — streets sample:", JSON.stringify(streets).slice(0, 1500));
-  const cityKey = matchCity(streets, target.city);
-  if (!cityKey) {
-    throw new Error(`Населений пункт «${target.city}» не знайдено на сайті ДТЕК.`);
-  }
+  
+const isStreetArray = Array.isArray(streets);
 
-  const streetValue = matchStreet(streets[cityKey], target.street);
-  if (!streetValue) {
-    throw new Error(`Вулицю «${target.street}» не знайдено для «${cityKey}».`);
-  }
+const cityKey = isStreetArray
+  ? target.city
+  : matchCity(streets, target.city);
+
+if (!cityKey) {
+  throw new Error(`Населений пункт «${target.city}» не знайдено на сайті ДТЕК.`);
+}
+
+const streetList = isStreetArray
+  ? streets
+  : streets[cityKey];
+
+const streetValue = matchStreet(streetList, target.street);
+
+if (!streetValue) {
+  throw new Error(`Вулицю «${target.street}» не знайдено.`);
+}
+
 
   const homeResponse = await post({
     method: "getHomeNum",
