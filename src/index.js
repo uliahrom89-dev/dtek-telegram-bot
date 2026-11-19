@@ -78,6 +78,12 @@ async function runCheck() {
 
       try {
         const scheduleData = await getAddressSchedule(target);
+        await checkOutageReminders({
+  target,
+  scheduleData,
+  token,
+  chatId,
+});
         const scheduleHash = createScheduleHash(scheduleData);
         const photoPath = await renderStatusCard(target, scheduleData, {
           alertMessage: scheduleData.alertMessage,
