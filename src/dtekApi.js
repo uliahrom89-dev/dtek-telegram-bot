@@ -1,4 +1,4 @@
--
+
 
 const SHUTDOWNS_URL = process.env.DTEK_URL || "https://www.dtek-kem.com.ua/ua/shutdowns";
 const RETRIES_MAX_COUNT = 2;
