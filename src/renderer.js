@@ -66,7 +66,7 @@ export function getKyivNow() {
 }
 
 export function formatDateDisplay(isoDate) {
-  const [y, m, d] = dateStr.split("-");
+  const [y, m, d] = isoDate.split("-");
   return `${d}.${m}.${y}`;
 }
 
