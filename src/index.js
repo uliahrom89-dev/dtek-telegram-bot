@@ -78,7 +78,8 @@ async function runCheck() {
 
       try {
         const scheduleData = await getAddressSchedule(target);
-
+        const reminders = getUpcomingReminders(scheduleData);
+        console.log(`⏰ Знайдено нагадувань: ${reminders.length}`);
         const scheduleHash = createScheduleHash(scheduleData);
         const photoPath = await renderStatusCard(target, scheduleData, {
           alertMessage: scheduleData.alertMessage,
