@@ -224,3 +224,21 @@ export async function sendTelegramNotification({
   console.log(`🟢 [${targetId}] Картку надіслано (message_id: ${result?.result?.message_id}).`);
   return result;
 }
+
+export async function sendOutageReminder({
+  token,
+  chatId,
+  threadId,
+  text,
+}) {
+  const message = {
+    chat_id: chatId,
+    text,
+  };
+
+  if (threadId) {
+    message.message_thread_id = Number(threadId);
+  }
+
+  return await callTelegram(token, "sendMessage", message);
+}
