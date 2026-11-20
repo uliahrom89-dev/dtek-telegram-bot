@@ -4,7 +4,7 @@ name: DTEK Schedule Checker
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: '*/5 * * * *'
     - cron: "0 7 * * *"
       timezone: "Europe/Kyiv"
   workflow_dispatch:
