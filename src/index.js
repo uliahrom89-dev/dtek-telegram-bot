@@ -4,7 +4,11 @@ import { renderStatusCard } from "./renderer.js";
 import { buildCaption } from "./caption.js";
 import { sendTelegramNotification, checkTelegramChat } from "./telegram.js";
 import { getUpcomingReminders } from "./reminders.js";
-import { sendOutageReminder } from "./telegram.js";
+import {
+  sendOutageReminder,
+  wasReminderSent,
+  markReminderSent,
+} from "./telegram.js";
 function parseTargets() {
   const raw = process.env.TARGETS;
   if (!raw) throw new Error("Не задано змінну TARGETS (список адрес у форматі JSON).");
@@ -103,6 +107,21 @@ for (const reminder of reminders) {
   ].join("\n");
 
   console.log(`⏰ Підготовлено нагадування: ${reminder.id}`);
+  
+if (telegramReady && !wasReminderSent(target.id, reminder.id)) {
+  const result = await sendOutageReminder({
+    token,
+    chatId,
+    threadId: target.thread_id,
+    text: reminderText,
+  });
+
+  if (result?.ok) {
+    markReminderSent(target.id, reminder.id);
+    console.log(`✅ Нагадування надіслано: ${reminder.id}`);
+  }
+}
+
 }
 
         const scheduleHash = createScheduleHash(scheduleData);
