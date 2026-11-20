@@ -3,7 +3,7 @@ import { getAddressSchedule, closeDtekResources } from "./dtekApi.js";
 import { renderStatusCard } from "./renderer.js";
 import { buildCaption } from "./caption.js";
 import { sendTelegramNotification, checkTelegramChat } from "./telegram.js";
-
+import { getUpcomingReminders } from "./reminders.js";
 function parseTargets() {
   const raw = process.env.TARGETS;
   if (!raw) throw new Error("Не задано змінну TARGETS (список адрес у форматі JSON).");
