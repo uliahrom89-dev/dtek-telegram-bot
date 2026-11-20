@@ -4,6 +4,7 @@ import { renderStatusCard } from "./renderer.js";
 import { buildCaption } from "./caption.js";
 import { sendTelegramNotification, checkTelegramChat } from "./telegram.js";
 import { getUpcomingReminders } from "./reminders.js";
+import { sendOutageReminder } from "./telegram.js";
 function parseTargets() {
   const raw = process.env.TARGETS;
   if (!raw) throw new Error("Не задано змінну TARGETS (список адрес у форматі JSON).");
@@ -80,6 +81,30 @@ async function runCheck() {
         const scheduleData = await getAddressSchedule(target);
         const reminders = getUpcomingReminders(scheduleData);
         console.log(`⏰ Знайдено нагадувань: ${reminders.length}`);
+        
+for (const reminder of reminders) {
+  const formatTime = (minutes) =>
+    `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+
+  const reminderText = [
+    "⚡ Сусіди, скоро вимкнуть світло!",
+    "",
+    "⏰ За графіком ДТЕК до відключення залишилося близько 30 хвилин.",
+    "📍 ОСББ Ревуцького, 42",
+    "",
+    `🔴 Відключення: ${formatTime(reminder.start)}`,
+    `🟢 Орієнтовне відновлення: ${formatTime(reminder.end)}`,
+    "",
+    "☕ Саме час заварити собі чайок, завантажити улюблений фільм і перевірити заряд павербанка.",
+    "",
+    "💛 Нехай день буде затишним навіть без світла!",
+    "",
+    "ℹ️ Час указано за плановим графіком ДТЕК і він може змінюватися.",
+  ].join("\n");
+
+  console.log(`⏰ Підготовлено нагадування: ${reminder.id}`);
+}
+
         const scheduleHash = createScheduleHash(scheduleData);
         const photoPath = await renderStatusCard(target, scheduleData, {
           alertMessage: scheduleData.alertMessage,
