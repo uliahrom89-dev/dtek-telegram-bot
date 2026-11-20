@@ -119,6 +119,25 @@ function saveState(targetId, state) {
   fs.writeFileSync(file, JSON.stringify(state, null, 2), "utf8");
 }
 
+export function wasReminderSent(targetId, reminderId) {
+  const state = loadState(targetId) || {};
+  return (state.sentReminders || []).includes(reminderId);
+}
+
+export function markReminderSent(targetId, reminderId) {
+  const state = loadState(targetId) || {};
+  const sentReminders = state.sentReminders || [];
+
+  if (!sentReminders.includes(reminderId)) {
+    sentReminders.push(reminderId);
+  }
+
+  saveState(targetId, {
+    ...state,
+    sentReminders: sentReminders.slice(-100),
+  });
+}
+
 export async function checkTelegramChat({ token, chatId }) {
   if (!token) throw new Error("Не задано TELEGRAM_BOT_TOKEN.");
   if (!chatId) throw new Error("Не задано TELEGRAM_CHAT_ID.");
@@ -169,6 +188,7 @@ export async function sendTelegramNotification({
 
         if (result.ok || result.notModified) {
           saveState(targetId, {
+              ...(loadState(targetId) || {}),
             ...state,
             scheduleHash,
             updatedAt: new Date().toISOString(),
@@ -212,6 +232,7 @@ export async function sendTelegramNotification({
 
   if (result?.result?.message_id) {
     saveState(targetId, {
+      ...(loadState(targetId) || {}),
       messageId: result.result.message_id,
       scheduleHash,
       date: currentDate,
