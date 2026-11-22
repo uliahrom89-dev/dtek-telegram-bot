@@ -263,3 +263,27 @@ export async function sendOutageReminder({
 
   return await callTelegram(token, "sendMessage", message);
 }
+
+
+export async function sendPowerPoll({
+  token,
+  chatId,
+  threadId,
+  question,
+  options,
+}) {
+  const message = {
+    chat_id: chatId,
+    question,
+    options,
+    is_anonymous: true,
+    allows_multiple_answers: false,
+  };
+
+  if (threadId) {
+    message.message_thread_id = Number(threadId);
+  }
+
+  return await callTelegram(token, "sendPoll", message);
+}
+
