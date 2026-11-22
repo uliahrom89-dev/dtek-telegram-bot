@@ -4,6 +4,7 @@ import { renderStatusCard } from "./renderer.js";
 import { buildCaption } from "./caption.js";
 import { sendTelegramNotification, checkTelegramChat } from "./telegram.js";
 import { getUpcomingReminders } from "./reminders.js";
+import { getUpcomingPolls } from "./polls.js";
 import {
   sendOutageReminder,
   wasReminderSent,
@@ -85,6 +86,17 @@ async function runCheck() {
         const scheduleData = await getAddressSchedule(target);
         const reminders = getUpcomingReminders(scheduleData);
         console.log(`⏰ Знайдено нагадувань: ${reminders.length}`);
+        
+const polls = getUpcomingPolls(scheduleData);
+
+console.log(`📊 Знайдено опитувань: ${polls.length}`);
+
+for (const poll of polls) {
+  console.log(
+    `📊 Заплановане опитування: ${poll.type} — ${poll.time}`
+  );
+}
+
         
 for (const reminder of reminders) {
   const formatTime = (minutes) =>
