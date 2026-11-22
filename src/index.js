@@ -96,37 +96,6 @@ const polls = getUpcomingPolls(scheduleData);
 console.log(`📊 Знайдено опитувань: ${polls.length}`);
 
 
-for (const poll of polls) {
-  if (!telegramReady || wasPollSent(target.id, poll.id)) {
-    continue;
-  }
-
-  const time = `${String(Math.floor(poll.time / 60)).padStart(2, "0")}:${String(poll.time % 60).padStart(2, "0")}`;
-
-  const isOff = poll.type === "off";
-
-  const question = isOff
-    ? `⚡ За графіком о ${time} мали вимкнути світло. Світло зникло?`
-    : `💡 За графіком о ${time} мали увімкнути світло. Світло з'явилося?`;
-
-  const options = isOff
-    ? ["🔴 Так, світла немає", "🟢 Ні, світло є"]
-    : ["🟢 Так, світло є", "🔴 Ні, світла немає"];
-
-  const result = await sendPowerPoll({
-    token,
-    chatId,
-    threadId: target.thread_id,
-    question,
-    options,
-  });
-
-  if (result?.ok) {
-    markPollSent(target.id, poll.id);
-    console.log(`✅ Опитування надіслано: ${poll.id}`);
-  }
-}
-
 
         
 for (const reminder of reminders) {
@@ -197,6 +166,37 @@ if (telegramReady && !wasReminderSent(target.id, reminder.id)) {
         } else {
           console.log(`ℹ️ [${target.name}] Telegram вимкнено — картку збережено: ${photoPath}`);
         }
+
+        for (const poll of polls) {
+  if (!telegramReady || wasPollSent(target.id, poll.id)) {
+    continue;
+  }
+
+  const time = `${String(Math.floor(poll.time / 60)).padStart(2, "0")}:${String(poll.time % 60).padStart(2, "0")}`;
+
+  const isOff = poll.type === "off";
+
+  const question = isOff
+    ? `⚡ За графіком о ${time} мали вимкнути світло. Світло зникло?`
+    : `💡 За графіком о ${time} мали увімкнути світло. Світло з'явилося?`;
+
+  const options = isOff
+    ? ["🔴 Так, світла немає", "🟢 Ні, світло є"]
+    : ["🟢 Так, світло є", "🔴 Ні, світла немає"];
+
+  const result = await sendPowerPoll({
+    token,
+    chatId,
+    threadId: target.thread_id,
+    question,
+    options,
+  });
+
+  if (result?.ok) {
+    markPollSent(target.id, poll.id);
+    console.log(`✅ Опитування надіслано: ${poll.id}`);
+  }
+}
       } catch (error) {
         failures.push({ target: target.name, error: error.message });
         console.error(`❌ Помилка для «${target.name}»: ${error.message}`);
