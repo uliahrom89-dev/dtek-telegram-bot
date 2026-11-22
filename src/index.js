@@ -92,6 +92,12 @@ async function runCheck() {
         
 const polls = getUpcomingPolls(scheduleData);
 
+polls.push({
+  id: "test-poll-001",
+  type: "off",
+  time: 960,
+});
+
 console.log(`📊 Знайдено опитувань: ${polls.length}`);
 
 
