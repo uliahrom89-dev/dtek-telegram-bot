@@ -138,6 +138,25 @@ export function markReminderSent(targetId, reminderId) {
   });
 }
 
+export function wasPollSent(targetId, pollId) {
+  const state = loadState(targetId) || {};
+  return (state.sentPolls || []).includes(pollId);
+}
+
+export function markPollSent(targetId, pollId) {
+  const state = loadState(targetId) || {};
+  const sentPolls = state.sentPolls || [];
+
+  if (!sentPolls.includes(pollId)) {
+    sentPolls.push(pollId);
+  }
+
+  saveState(targetId, {
+    ...state,
+    sentPolls: sentPolls.slice(-100),
+  });
+}
+
 export async function checkTelegramChat({ token, chatId }) {
   if (!token) throw new Error("Не задано TELEGRAM_BOT_TOKEN.");
   if (!chatId) throw new Error("Не задано TELEGRAM_CHAT_ID.");
