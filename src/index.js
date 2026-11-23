@@ -44,15 +44,24 @@ function parseTargets() {
 }
 
 function createScheduleHash(scheduleData) {
-  const payload = {
-    groups: scheduleData.groups,
-    data: scheduleData.fact?.data,
-    alertMessage: scheduleData.alertMessage,
-    currentOutage: scheduleData.currentOutage,
-  };
-  return crypto.createHash("sha256").update(JSON.stringify(payload)).digest("hex");
-}
+  const groups = [...(scheduleData.groups || [])].sort();
+  const data = scheduleData.fact?.data || {};
 
+  const payload = {
+    groups,
+    data: Object.keys(data).sort().map(date => ({
+      date,
+      groups: groups.map(group => ({
+        group,
+        hours: data[date]?.[group] || null
+      }))
+    }))
+  };
+
+  return crypto.createHash("sha256")
+    .update(JSON.stringify(payload))
+    .digest("hex");
+}
 async function runCheck() {
   console.log(`\n🚀 [${new Date().toLocaleString("uk-UA", { timeZone: "Europe/Kyiv" })}] Запуск перевірки графіків ДТЕК КРЕМ`);
 
