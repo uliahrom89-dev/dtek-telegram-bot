@@ -8,6 +8,12 @@ on:
     - cron: "0 7 * * *"
       timezone: "Europe/Kyiv"
   workflow_dispatch:
+    inputs:
+      force_poll:
+        description: "Надіслати опитування про наявність світла"
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: dtek-checker
@@ -53,6 +59,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TARGETS: ${{ secrets.TARGETS }}
+          FORCE_POLL: ${{ inputs.force_poll }}
           DTEK_BROWSER_FALLBACK: 'true'
         run: npm start
 
