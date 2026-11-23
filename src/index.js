@@ -47,7 +47,6 @@ function createScheduleHash(scheduleData) {
   const payload = {
     groups: scheduleData.groups,
     data: scheduleData.fact?.data,
-    update: scheduleData.fact?.update,
     alertMessage: scheduleData.alertMessage,
     currentOutage: scheduleData.currentOutage,
   };
