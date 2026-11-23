@@ -91,7 +91,14 @@ async function runCheck() {
         console.log(`⏰ Знайдено нагадувань: ${reminders.length}`);
         
 const polls = getUpcomingPolls(scheduleData);
-
+if (process.env.FORCE_POLL === "true") {
+  polls.length = 0;
+  polls.push({
+    id: `manual-${process.env.GITHUB_RUN_ID}`,
+    type: "manual",
+    time: 0
+  });
+}
 
 console.log(`📊 Знайдено опитувань: ${polls.length}`);
 
@@ -176,10 +183,11 @@ if (telegramReady && !wasReminderSent(target.id, reminder.id)) {
 
   const isOff = poll.type === "off";
 
-  const question = isOff
+const question = poll.type === "manual"
+  ? "💡 Чи є зараз світло у вашій квартирі?"
+  : isOff
     ? `⚡ За графіком о ${time} мали вимкнути світло. Світло зникло?`
     : `💡 За графіком о ${time} мали увімкнути світло. Світло з'явилося?`;
-
   const options = isOff
     ? ["🔴 Так, світла немає", "🟢 Ні, світло є"]
     : ["🟢 Так, світло є", "🔴 Ні, світла немає"];
